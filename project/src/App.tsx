@@ -15,10 +15,11 @@ import {
   Save,
   MessageCircle,
   Moon,
-  Sun
+  Sun,
+  Trash
 } from 'lucide-react';
 
-function App() {
+export default function App() {
   // User Profile State
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profile, setProfile] = useState({
@@ -60,15 +61,15 @@ function App() {
   const [messages, setMessages] = useState([
     { text: "Hi! I'm Totoro, your magical assistant! How can I help you today?", isBot: true }
   ]);
+
   // Dark Mode State
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [newMessage, setNewMessage] = useState('');
 
   const handleToggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
     document.body.classList.toggle('dark-mode', !isDarkMode);
   };
-
-  const [newMessage, setNewMessage] = useState('');
 
   // Profile Handlers
   const handleProfileSave = () => {
@@ -85,13 +86,21 @@ function App() {
     }
   };
 
+  const handleDeleteClass = (index: number) => {
+    setClasses(classes.filter((_, i) => i !== index));
+  };
+
   // Event Handlers
   const handleAddEvent = () => {
-    if (newEvent.title && newEvent.date) {
-      setEvents([...events, { ...newEvent, attendees: Number(newEvent.attendees) || 0 }]);
+    if (newEvent.title && newEvent.date && newEvent.attendees > 0) {
+      setEvents([...events, newEvent]);
       setNewEvent({ title: '', date: '', attendees: 0 });
       setIsAddingEvent(false);
     }
+  };
+
+  const handleDeleteEvent = (index: number) => {
+    setEvents(events.filter((_, i) => i !== index));
   };
 
   // Deadline Handlers
@@ -101,6 +110,10 @@ function App() {
       setNewDeadline({ task: '', due: '', subject: '' });
       setIsAddingDeadline(false);
     }
+  };
+
+  const handleDeleteDeadline = (index: number) => {
+    setDeadlines(deadlines.filter((_, i) => i !== index));
   };
 
   // Chat Handlers
@@ -147,8 +160,8 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-[#f5f3ef]'}`}>
-      <header className="bg-[#7c9b88] p-4 shadow-lg">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-[#1a1a1a] text-white' : 'bg-[#f5f3ef] text-[#2c4a3d]'}`}>
+      <header className={`${isDarkMode ? 'bg-[#4a5d53]' : 'bg-[#7c9b88]'} p-4 shadow-lg`}>
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <GraduationCap className="h-8 w-8 text-white" />
@@ -174,10 +187,10 @@ function App() {
 
       <main className="max-w-7xl mx-auto p-4 md:p-6">
         {/* Hero Section with Profile */}
-        <div className="mb-8 bg-[#d4e4d9] rounded-lg p-6 shadow-md">
+        <div className={`mb-8 ${isDarkMode ? 'bg-[#2a3a31]' : 'bg-[#d4e4d9]'} rounded-lg p-6 shadow-md`}>
           <div className="relative overflow-hidden rounded-lg mb-6">
             <img 
-              src="https://images.unsplash.com/photo-1560785496-3c9d27877182?w=1600&h=400&fit=crop" 
+              src="https://i.pinimg.com/736x/4b/98/a0/4b98a0da4cc43c61fa747614127733d4.jpg" 
               alt="Campus" 
               className="w-full h-48 object-cover rounded-lg"
             />
@@ -190,17 +203,17 @@ function App() {
           </div>
 
           {/* Profile Section */}
-          <div className="bg-white rounded-lg p-6 shadow-sm">
+          <div className={`${isDarkMode ? 'bg-[#2c3e36]' : 'bg-white'} rounded-lg p-6 shadow-sm`}>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-[#2c4a3d]">Student Profile</h3>
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>Student Profile</h3>
               {isEditingProfile ? (
                 <Save 
-                  className="h-5 w-5 text-[#7c9b88] cursor-pointer" 
+                  className={`h-5 w-5 ${isDarkMode ? 'text-[#a0c1ab]' : 'text-[#7c9b88]'} cursor-pointer`} 
                   onClick={handleProfileSave}
                 />
               ) : (
                 <Edit 
-                  className="h-5 w-5 text-[#7c9b88] cursor-pointer" 
+                  className={`h-5 w-5 ${isDarkMode ? 'text-[#a0c1ab]' : 'text-[#7c9b88]'} cursor-pointer`} 
                   onClick={() => setIsEditingProfile(true)}
                 />
               )}
@@ -209,25 +222,33 @@ function App() {
               {isEditingProfile ? (
                 <>
                   <input
-                    className="p-2 border rounded"
+                    className={`p-2 border rounded ${
+                      isDarkMode ? 'bg-[#1a2a22] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={editableProfile.name}
                     onChange={(e) => setEditableProfile({...editableProfile, name: e.target.value})}
                     placeholder="Name"
                   />
                   <input
-                    className="p-2 border rounded"
+                    className={`p-2 border rounded ${
+                      isDarkMode ? 'bg-[#1a2a22] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={editableProfile.year}
                     onChange={(e) => setEditableProfile({...editableProfile, year: e.target.value})}
                     placeholder="Year"
                   />
                   <input
-                    className="p-2 border rounded"
+                    className={`p-2 border rounded ${
+                      isDarkMode ? 'bg-[#1a2a22] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={editableProfile.major}
                     onChange={(e) => setEditableProfile({...editableProfile, major: e.target.value})}
                     placeholder="Major"
                   />
                   <input
-                    className="p-2 border rounded"
+                    className={`p-2 border rounded ${
+                      isDarkMode ? 'bg-[#1a2a22] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={editableProfile.spirit}
                     onChange={(e) => setEditableProfile({...editableProfile, spirit: e.target.value})}
                     placeholder="Guardian Spirit"
@@ -236,16 +257,16 @@ function App() {
               ) : (
                 <>
                   <div>
-                    <p className="text-sm text-gray-500">Year</p>
-                    <p className="font-medium text-[#2c4a3d]">{profile.year}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Year</p>
+                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>{profile.year}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Major</p>
-                    <p className="font-medium text-[#2c4a3d]">{profile.major}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Major</p>
+                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>{profile.major}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Guardian Spirit</p>
-                    <p className="font-medium text-[#2c4a3d]">{profile.spirit}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Guardian Spirit</p>
+                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>{profile.spirit}</p>
                   </div>
                 </>
               )}
@@ -256,43 +277,54 @@ function App() {
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Today's Classes */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className={`${isDarkMode ? 'bg-[#2c3e36]' : 'bg-white'} p-6 rounded-lg shadow-md`}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-[#2c4a3d]">Today's Classes</h3>
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>Today's Classes</h3>
               <div className="flex items-center space-x-2">
-                <Clock className="h-5 w-5 text-[#7c9b88]" />
+                <Clock className={`h-5 w-5 ${isDarkMode ? 'text-[#a0c1ab]' : 'text-[#7c9b88]'}`} />
                 <Plus 
-                  className="h-5 w-5 text-[#7c9b88] cursor-pointer" 
+                  className={`h-5 w-5 ${isDarkMode ? 'text-[#a0c1ab]' : 'text-[#7c9b88]'} cursor-pointer`} 
                   onClick={() => setIsAddingClass(true)}
                 />
               </div>
             </div>
             <div className="space-y-4">
               {classes.map((cls, index) => (
-                <div key={index} className="flex items-center space-x-3 p-3 bg-[#f5f3ef] rounded-md">
-                  <BookOpen className="h-5 w-5 text-[#7c9b88]" />
+                <div key={index} className={`flex items-center justify-between p-3 ${
+                  isDarkMode ? 'bg-[#1a2a22]' : 'bg-[#f5f3ef]'
+                } rounded-md`}>
                   <div>
-                    <p className="font-medium text-[#2c4a3d]">{cls.name}</p>
-                    <p className="text-sm text-gray-500">Room {cls.room} • {cls.time}</p>
+                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>{cls.name}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Room {cls.room} • {cls.time}</p>
                   </div>
+                  <Trash 
+                    className="h-4 w-4 text-red-500 cursor-pointer" 
+                    onClick={() => handleDeleteClass(index)} 
+                  />
                 </div>
               ))}
               {isAddingClass && (
-                <div className="space-y-2 p-3 bg-[#f5f3ef] rounded-md">
+                <div className={`space-y-2 p-3 ${isDarkMode ? 'bg-[#1a2a22]' : 'bg-[#f5f3ef]'} rounded-md`}>
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={newClass.name}
                     onChange={(e) => setNewClass({...newClass, name: e.target.value})}
                     placeholder="Class Name"
                   />
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={newClass.room}
                     onChange={(e) => setNewClass({...newClass, room: e.target.value})}
                     placeholder="Room Number"
                   />
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={newClass.time}
                     onChange={(e) => setNewClass({...newClass, time: e.target.value})}
                     placeholder="Time"
@@ -305,7 +337,9 @@ function App() {
                       Add
                     </button>
                     <button
-                      className="px-3 py-1 bg-gray-300 rounded"
+                      className={`px-3 py-1 ${
+                        isDarkMode ? 'bg-[#4a5d53] text-white' : 'bg-gray-300 text-[#2c4a3d]'
+                      } rounded`}
                       onClick={() => setIsAddingClass(false)}
                     >
                       Cancel
@@ -317,46 +351,58 @@ function App() {
           </div>
 
           {/* Upcoming Events */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className={`${isDarkMode ? 'bg-[#2c3e36]' : 'bg-white'} p-6 rounded-lg shadow-md`}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-[#2c4a3d]">Upcoming Events</h3>
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>Upcoming Events</h3>
               <div className="flex items-center space-x-2">
-                <Calendar className="h-5 w-5 text-[#7c9b88]" />
+                <Calendar className={`h-5 w-5 ${isDarkMode ? 'text-[#a0c1ab]' : 'text-[#7c9b88]'}`} />
                 <Plus 
-                  className="h-5 w-5 text-[#7c9b88] cursor-pointer" 
+                  className={`h-5 w-5 ${isDarkMode ? 'text-[#a0c1ab]' : 'text-[#7c9b88]'} cursor-pointer`} 
                   onClick={() => setIsAddingEvent(true)}
                 />
               </div>
             </div>
             <div className="space-y-4">
               {events.map((event, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-[#f5f3ef] rounded-md">
+                <div key={index} className={`flex items-center justify-between p-3 ${
+                  isDarkMode ? 'bg-[#1a2a22]' : 'bg-[#f5f3ef]'
+                } rounded-md`}>
                   <div>
-                    <p className="font-medium text-[#2c4a3d]">{event.title}</p>
-                    <p className="text-sm text-gray-500">{event.date}</p>
+                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>{event.title}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{event.date}</p>
                   </div>
-                  <div className="flex items-center text-sm text-[#7c9b88]">
+                  <div className={`flex items-center text-sm ${isDarkMode ? 'text-[#a0c1ab]' : 'text-[#7c9b88]'}`}>
                     <Users className="h-4 w-4 mr-1" />
                     {event.attendees}
+                    <Trash 
+                      className="h-4 w-4 ml-2 text-red-500 cursor-pointer" 
+                      onClick={() => handleDeleteEvent(index)} 
+                    />
                   </div>
                 </div>
               ))}
               {isAddingEvent && (
-                <div className="space-y-2 p-3 bg-[#f5f3ef] rounded-md">
+                <div className={`space-y-2 p-3 ${isDarkMode ? 'bg-[#1a2a22]' : 'bg-[#f5f3ef]'} rounded-md`}>
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={newEvent.title}
                     onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
                     placeholder="Event Title"
                   />
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={newEvent.date}
                     onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
                     placeholder="Date"
                   />
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     type="number"
                     value={newEvent.attendees}
                     onChange={(e) => setNewEvent({...newEvent, attendees: parseInt(e.target.value)})}
@@ -370,7 +416,9 @@ function App() {
                       Add
                     </button>
                     <button
-                      className="px-3 py-1 bg-gray-300 rounded"
+                      className={`px-3 py-1 ${
+                        isDarkMode ? 'bg-[#4a5d53] text-white' : 'bg-gray-300 text-[#2c4a3d]'
+                      } rounded`}
                       onClick={() => setIsAddingEvent(false)}
                     >
                       Cancel
@@ -382,37 +430,53 @@ function App() {
           </div>
 
           {/* Deadlines */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className={`${isDarkMode ? 'bg-[#2c3e36]' : 'bg-white'} p-6 rounded-lg shadow-md`}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-[#2c4a3d]">Upcoming Deadlines</h3>
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>Upcoming Deadlines</h3>
               <Plus 
-                className="h-5 w-5 text-[#7c9b88] cursor-pointer" 
+                className={`h-5 w-5 ${isDarkMode ? 'text-[#a0c1ab]' : 'text-[#7c9b88]'} cursor-pointer`} 
                 onClick={() => setIsAddingDeadline(true)}
               />
             </div>
             <div className="space-y-4">
               {deadlines.map((deadline, index) => (
-                <div key={index} className="p-3 bg-[#f5f3ef] rounded-md">
-                  <p className="font-medium text-[#2c4a3d]">{deadline.task}</p>
-                  <p className="text-sm text-gray-500">{deadline.subject} • Due {deadline.due}</p>
+                <div key={index} className={`flex justify-between p-3 ${
+                  isDarkMode ? 'bg-[#1a2a22]' : 'bg-[#f5f3ef]'
+                } rounded-md`}>
+                  <div>
+                    <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-[#2c4a3d]'}`}>{deadline.task}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      {deadline.subject} • Due {deadline.due}
+                    </p>
+                  </div>
+                  <Trash 
+                    className="h-4 w-4 text-red-500 cursor-pointer" 
+                    onClick={() => handleDeleteDeadline(index)} 
+                  />
                 </div>
               ))}
               {isAddingDeadline && (
-                <div className="space-y-2 p-3 bg-[#f5f3ef] rounded-md">
+                <div className={`space-y-2 p-3 ${isDarkMode ? 'bg-[#1a2a22]' : 'bg-[#f5f3ef]'} rounded-md`}>
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={newDeadline.task}
                     onChange={(e) => setNewDeadline({...newDeadline, task: e.target.value})}
                     placeholder="Task Name"
                   />
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={newDeadline.subject}
                     onChange={(e) => setNewDeadline({...newDeadline, subject: e.target.value})}
                     placeholder="Subject"
                   />
                   <input
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      isDarkMode ? 'bg-[#2c3e36] border-[#4a5d53] text-white' : 'bg-white text-[#2c4a3d]'
+                    }`}
                     value={newDeadline.due}
                     onChange={(e) => setNewDeadline({...newDeadline, due: e.target.value})}
                     placeholder="Due Date"
@@ -425,7 +489,9 @@ function App() {
                       Add
                     </button>
                     <button
-                      className="px-3 py-1 bg-gray-300 rounded"
+                      className={`px-3 py-1 ${
+                        isDarkMode ? 'bg-[#4a5d53] text-white' : 'bg-gray-300 text-[#2c4a3d]'
+                      } rounded`}
                       onClick={() => setIsAddingDeadline(false)}
                     >
                       Cancel
@@ -441,7 +507,7 @@ function App() {
       {/* Totoro Chat */}
       <div className={`fixed bottom-4 right-4 transition-all duration-300 ${isChatOpen ? 'w-80' : 'w-auto'}`}>
         {isChatOpen ? (
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className={`${isDarkMode ? 'bg-[#2c3e36]' : 'bg-white'} rounded-lg shadow-lg overflow-hidden`}>
             <div className="bg-[#7c9b88] p-4 flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <img 
@@ -461,7 +527,7 @@ function App() {
                 <div key={index} className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}>
                   <div className={`max-w-[80%] p-3 rounded-lg ${
                     message.isBot 
-                      ? 'bg-[#f5f3ef] text-[#2c4a3d]' 
+                      ? (isDarkMode ? 'bg-[#1a2a22] text-white' : 'bg-[#f5f3ef] text-[#2c4a3d]')
                       : 'bg-[#7c9b88] text-white'
                   }`}>
                     {message.text}
@@ -469,7 +535,7 @@ function App() {
                 </div>
               ))}
             </div>
-            <div className="p-4 border-t">
+            <div className={`p-4 border-t ${isDarkMode ? 'border-[#4a5d53]' : ''}`}>
               <div className="flex space-x-2">
                 <input
                   type="text"
@@ -477,7 +543,10 @@ function App() {
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Ask Totoro..."
-                  className="flex-1 p-2 border rounded-lg focus:outline-none focus:border-[#7c9b88]"
+                  className={`flex-1 p-2 border rounded-lg focus:outline-none focus:border-[#7c9b88] ${
+                    isDarkMode ? 'bg-[#1a2a22] border-[#4a5d53] text-white placeholder-gray-400' : 
+                    'bg-white border-gray-200 text-[#2c4a3d]'
+                  }`}
                 />
                 <button
                   onClick={handleSendMessage}
@@ -500,5 +569,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
