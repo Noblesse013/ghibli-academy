@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { 
+  BookOpen, 
   Calendar, 
   GraduationCap, 
+  BarChart3, 
   Clock, 
   Users,
+  Bell,
   User,
   Plus,
   X,
