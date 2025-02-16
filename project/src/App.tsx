@@ -13,7 +13,9 @@ import {
   Edit,
   Send,
   Save,
-  MessageCircle
+  MessageCircle,
+  Moon,
+  Sun
 } from 'lucide-react';
 
 function App() {
@@ -58,6 +60,14 @@ function App() {
   const [messages, setMessages] = useState([
     { text: "Hi! I'm Totoro, your magical assistant! How can I help you today?", isBot: true }
   ]);
+  // Dark Mode State
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const handleToggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.body.classList.toggle('dark-mode', !isDarkMode);
+  };
+
   const [newMessage, setNewMessage] = useState('');
 
   // Profile Handlers
@@ -137,8 +147,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f3ef]">
-      {/* Header */}
+    <div className={`min-h-screen ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-[#f5f3ef]'}`}>
       <header className="bg-[#7c9b88] p-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
@@ -146,8 +155,14 @@ function App() {
             <h1 className="text-2xl font-semibold text-white">Ghibli Academy</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <Bell className="h-6 w-6 text-white cursor-pointer hover:text-[#e8d3a3]" />
-            <div className="flex items-center space-x-2 cursor-pointer">
+            <div className="flex items-center space-x-2 cursor-pointer" onClick={handleToggleDarkMode}>
+              {isDarkMode ? (
+                <Sun className="h-6 w-6 text-white" />
+              ) : (
+                <Moon className="h-6 w-6 text-white" />
+              )}
+            </div>
+            <div className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-full bg-[#e8d3a3] flex items-center justify-center">
                 <User className="h-5 w-5 text-[#7c9b88]" />
               </div>
